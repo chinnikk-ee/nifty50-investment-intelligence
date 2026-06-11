@@ -14,6 +14,9 @@ data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 
+# Build / distribution artifacts (zips, packaged bundles)
+dist/
+
 # Models & artifacts
 ml/artifacts/
 *.h5
