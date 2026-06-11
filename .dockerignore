@@ -1,0 +1,13 @@
+**/node_modules
+**/.next
+**/__pycache__
+**/*.pyc
+.git
+data/raw
+data/processed
+ml/artifacts
+reports/generated
+notebooks
+tests
+docs
+*.md
