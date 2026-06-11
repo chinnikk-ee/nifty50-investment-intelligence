@@ -1,0 +1,4 @@
+# Optional deep-learning extras: enables LSTM/Transformer forecasters and the
+# Keras autoencoder anomaly detector. Everything degrades gracefully without it.
+tensorflow-cpu>=2.17 ; sys_platform != "darwin"
+tensorflow>=2.17 ; sys_platform == "darwin"

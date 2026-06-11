@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Data (large files are not committed; see scripts/download_data.py)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Models & artifacts
+ml/artifacts/
+*.h5
+*.keras
+*.joblib
+*.pkl
+
+# Reports
+reports/generated/*
+!reports/generated/.gitkeep
+
+# Node
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/next-env.d.ts
+
+# Env & IDE
+.env
+.env.local
+.idea/
+.vscode/
+*.log
+.DS_Store

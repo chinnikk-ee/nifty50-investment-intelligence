@@ -1,0 +1,25 @@
+# Core platform (backend + ML). Python 3.11.
+fastapi>=0.115
+uvicorn[standard]>=0.32
+pydantic>=2.9
+pandas>=2.2
+numpy>=1.26
+scipy>=1.13
+scikit-learn>=1.5
+xgboost>=2.1
+lightgbm>=4.5
+joblib>=1.4
+pyarrow>=17.0
+matplotlib>=3.9
+seaborn>=0.13
+plotly>=5.24
+shap>=0.46
+lime>=0.2.0.1
+
+# Testing
+pytest>=8.3
+httpx>=0.27
+
+# Optional deep-learning models (LSTM / Transformer / Keras autoencoder).
+# Heavy download — install only if you want the deep forecasters:
+#   pip install -r requirements-deep.txt
