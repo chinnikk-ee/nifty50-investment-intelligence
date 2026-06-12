@@ -71,10 +71,42 @@ investment-intelligence/
 └── docker-compose.yml
 ```
 
-## Reproducibility
+## Reproducing results
 
-- All randomness is seeded (`random_state=42` everywhere, seeded synthetic generator).
-- `python scripts/train_all.py` re-runs the entire offline pipeline (ingest → EDA → model comparison → forecasts → recommendations → PDF report) and writes artifacts to `ml/artifacts/`.
-- Evaluation is **leakage-safe**: expanding-window splits with a gap equal to the forecast horizon so overlapping forward targets never cross the train/test boundary.
+Re-create every result artifact and report figure from scratch:
+
+```bash
+# 1. Environment + dependencies (see "Quick start" above)
+pip install -r requirements.txt
+
+# 2. Use the real dataset so numbers match the report (not the synthetic fallback)
+python scripts/download_data.py            # or place the Kaggle CSVs in data/raw/ manually
+export ALLOW_SYNTHETIC_DATA=false          # Windows: set ALLOW_SYNTHETIC_DATA=false
+
+# 3. Ingest → clean → parquet
+python -m backend.data_loader              # writes data/processed/
+
+# 4. Train, evaluate, score and render the report
+python scripts/train_all.py                # ~10 min for the full 50-stock universe
+```
+
+This writes the result artifacts to `ml/artifacts/`:
+
+| Artifact | Contents |
+|---|---|
+| `model_comparison.csv` | every stock × model × horizon: RMSE, MAE, MAPE, R², directional accuracy (out-of-fold) |
+| `risk_table.csv` | vol, Sharpe, Sortino, Calmar, max drawdown, VaR, CVaR, alpha, beta per stock |
+| `recommendations.json` | BUY/HOLD/SELL + component scores + reasoning |
+| `*_ret20.joblib` | the trained per-stock forecasters the API serves |
+
+and a timestamped PDF to `reports/generated/`. Because every stochastic step is seeded
+(`random_state=42`, seeded synthetic generator), a clean run reproduces the headline figures
+in the technical report — e.g. **20-day best directional accuracy ≈ 0.64**, **mean Sharpe ≈ 0.27**,
+**23 BUY / 20 HOLD / 6 SELL** (the recommendation split is the full five-signal engine; the
+dashboard's fast default view omits the forecast signal — see [docs/MODELS.md](docs/MODELS.md)).
+
+> **Why it's trustworthy.** Evaluation is **leakage-safe**: expanding-window walk-forward splits
+> with a gap equal to the forecast horizon, so overlapping forward-return targets never cross the
+> train/test boundary, and all reported metrics are out-of-fold only.
 
 See `docs/` for the architecture diagram, API reference, model documentation and detailed install instructions.
