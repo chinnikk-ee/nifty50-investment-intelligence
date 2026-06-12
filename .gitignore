@@ -27,6 +27,7 @@ ml/artifacts/
 # Reports
 reports/generated/*
 !reports/generated/.gitkeep
+PROJECT_STATUS.md
 
 # Node
 frontend/node_modules/

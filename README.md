@@ -31,6 +31,8 @@ cd frontend && npm install && npm run dev          # http://localhost:3000
 pytest
 ```
 
+> **Warm the cache for an instant dashboard.** The first forecast/recommendation/PDF-report call trains models on demand — leakage-safe walk-forward validation means ~10s per stock, so the full universe takes a few minutes cold. Run `python scripts/train_all.py` once after setup (or hit `/recommendations?with_forecasts=true`) to warm every cache the API uses; the dashboard is instant for the rest of the session. This is expected behavior, not a hang.
+
 ## Using the real dataset
 
 Download [rohanrao/nifty50-stock-market-data](https://www.kaggle.com/datasets/rohanrao/nifty50-stock-market-data) from Kaggle (or run `python scripts/download_data.py` with kagglehub installed) and place the per-stock CSVs + `stock_metadata.csv` in `data/raw/`. Set `ALLOW_SYNTHETIC_DATA=false` to forbid the synthetic fallback. The ingestion pipeline (`python -m backend.data_loader`) validates schema, cleans, normalizes dates and writes parquet artifacts to `data/processed/`.
@@ -50,7 +52,7 @@ Download [rohanrao/nifty50-stock-market-data](https://www.kaggle.com/datasets/ro
 | Recommendations | `ml/recommendation/` | BUY/HOLD/SELL with natural-language reasoning over 5 weighted signals |
 | API | `backend/` | `/stocks`, `/forecast`, `/portfolio`, `/risk`, `/anomalies`, `/recommendations`, `/explainability` + bonus endpoints |
 | Dashboard | `frontend/` | Next.js 15 + TypeScript + Tailwind + Recharts; dark mode; 8 pages |
-| Reports | `ml/reports.py` | downloadable multi-page PDF |
+| Reports | `ml/reports.py`, `scripts/build_report.py` | downloadable analytics PDF + the written **[Technical Report](reports/generated/TECHNICAL_REPORT.pdf)** (`docs/TECHNICAL_REPORT.md`) |
 | Bonus | `ml/analytics.py`, `ml/backtest.py`, `ml/simulation.py`, `ml/assistant.py` | sector rotation, correlation network, backtesting, Monte-Carlo & scenario simulation, risk questionnaire, insight chat assistant |
 
 ## Repository layout

@@ -21,13 +21,19 @@ import {
 
 const PALETTE = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4", "#ec4899", "#84cc16"];
 
+// Theme-aware: reads the same CSS variables the rest of the app uses, so the
+// tooltip follows light/dark instead of being hardcoded dark.
 const tooltipStyle = {
-  backgroundColor: "hsl(222 41% 11%)",
-  border: "1px solid hsl(220 27% 25%)",
+  backgroundColor: "hsl(var(--card))",
+  border: "1px solid hsl(var(--border))",
   borderRadius: 8,
   fontSize: 12,
-  color: "#e2e8f0",
+  color: "hsl(var(--card-foreground))",
 };
+// contentStyle.color does not reach the label/value rows — set them explicitly
+// or the label text falls back to a dark default and vanishes on the dark box.
+const tooltipLabelStyle = { color: "hsl(var(--card-foreground))", fontWeight: 600 };
+const tooltipItemStyle = { color: "hsl(var(--card-foreground))" };
 
 export function PriceChart({
   data,
@@ -46,7 +52,7 @@ export function PriceChart({
         <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
         <XAxis dataKey={xKey} tick={{ fontSize: 10 }} minTickGap={48} />
         <YAxis tick={{ fontSize: 10 }} domain={["auto", "auto"]} width={70} />
-        <Tooltip contentStyle={tooltipStyle} />
+        <Tooltip contentStyle={tooltipStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} />
         {series.length > 1 && <Legend wrapperStyle={{ fontSize: 11 }} />}
         {series.map((s, i) => (
           <Line
@@ -86,7 +92,7 @@ export function BandChart({
         <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
         <XAxis dataKey="day" tick={{ fontSize: 10 }} />
         <YAxis tick={{ fontSize: 10 }} domain={["auto", "auto"]} width={70} />
-        <Tooltip contentStyle={tooltipStyle} />
+        <Tooltip contentStyle={tooltipStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} />
         <Area dataKey="base" stackId="o" stroke="none" fill="transparent" />
         <Area dataKey="outer" stackId="o" stroke="none" fill="#3b82f6" fillOpacity={0.12} name="5–95%" />
         <Area dataKey="innerBase" stackId="i" stroke="none" fill="transparent" />
@@ -107,7 +113,12 @@ export function AllocationPie({ allocation, height = 300 }: { allocation: Record
             <Cell key={i} fill={PALETTE[i % PALETTE.length]} />
           ))}
         </Pie>
-        <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => `${v.toFixed(2)}%`} />
+        <Tooltip
+          contentStyle={tooltipStyle}
+          labelStyle={tooltipLabelStyle}
+          itemStyle={tooltipItemStyle}
+          formatter={(v: number) => `${v.toFixed(2)}%`}
+        />
         <Legend wrapperStyle={{ fontSize: 11 }} />
       </PieChart>
     </ResponsiveContainer>
@@ -133,7 +144,7 @@ export function SimpleBars({
         <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
         <XAxis dataKey={xKey} tick={{ fontSize: 10 }} interval={0} angle={-30} textAnchor="end" height={60} />
         <YAxis tick={{ fontSize: 10 }} width={70} />
-        <Tooltip contentStyle={tooltipStyle} />
+        <Tooltip contentStyle={tooltipStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} />
         <Bar dataKey={yKey} radius={[4, 4, 0, 0]}>
           {data.map((d, i) => (
             <Cell
