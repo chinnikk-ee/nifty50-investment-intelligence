@@ -17,12 +17,14 @@ data/processed/*
 # Build / distribution artifacts (zips, packaged bundles)
 dist/
 
-# Models & artifacts
-ml/artifacts/
+# Models & artifacts (ignore stray binaries everywhere...)
 *.h5
 *.keras
 *.joblib
 *.pkl
+# ...but DO commit the trained models + result tables under ml/artifacts/ (Deliverable 3)
+!ml/artifacts/
+!ml/artifacts/*.joblib
 
 # Reports
 reports/generated/*
